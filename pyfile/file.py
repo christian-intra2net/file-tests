@@ -277,6 +277,13 @@ def get_full_metadata(infile, file_name="file", compiled=True,
     Run `file(1)` repeatedly with different magic files created in
     :py:func`compile_patterns` until the one pattern is identified that defines
     the `file(1)` output of the given `infile`.
+
+    Returns dict with fields `output` (output of `file`), `mime` (output of
+    `file -i`), `suffix` (part of file name after last `.`), and `pattern` (the
+    pattern that caused `output`).
+
+    If `pattern` is empty, then some pattern built into `file(1)` (as opposed
+    to pattern from magic files) has caused `output`.
     """
     compiled_suffix = ".mgc"
     if not compiled:
