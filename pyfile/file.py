@@ -105,8 +105,7 @@ def get_simple_metadata(filename, binary="file"):
     return metadata
 
 
-def _split_patterns(pattern_id=0, magdir="Magdir", file_name="file",
-                    only_name=False):
+def _split_patterns(pattern_id, magdir, outputdir, only_name=False):
     """
     Actual worker function for :py:func:split_patterns`.
 
@@ -116,17 +115,11 @@ def _split_patterns(pattern_id=0, magdir="Magdir", file_name="file",
 
     Output file name are just their pattern_id, starting with id given as arg.
 
-    Arg `file_name` only used for getting dir name through hashing. `file(1)`
-    is not called here.
-
-    Returns number of pattern files thus created.
+    Returns number for next pattern file to write
+    (i.e. last number written + 1).
     """
-    file_binary_hash = hashlib.sha224(file_name).hexdigest()
-    outputdir = ".mgc_temp/" + file_binary_hash + "/output"
-    mkdir_p(outputdir)
-
     files = os.listdir(magdir)
-    files.sort()   # TODO: sort like the others?
+    files.sort()   # regular sort since file names are not numeric
     if not files:
         raise ValueError('no files found in Magdir {0}'
                          .format(os.path.join(os.getcwd(), magdir)))
@@ -154,12 +147,12 @@ def _split_patterns(pattern_id=0, magdir="Magdir", file_name="file",
                             as writer:
                         writer.write(buff)
                     in_pattern = False
+                    pattern_id += 1
                 buff = ""
                 if only_name:
                     if not re.match("^[0-9]*(\\s)*name", line.strip()):
                         continue
                 in_pattern = True
-                pattern_id += 1
                 buff += "#" + loop_file_name + "\n"
                 buff += "# Automatically generated from:\n"
                 buff += "#" + loop_file_name + ":" + str(line_idx) + "\n"
@@ -173,6 +166,7 @@ def _split_patterns(pattern_id=0, magdir="Magdir", file_name="file",
         if in_pattern:
             with open(os.path.join(outputdir, str(pattern_id)), "w") as writer:
                 writer.write(buff)
+            pattern_id += 1
     return pattern_id
 
 
@@ -183,8 +177,18 @@ def split_patterns(magdir="Magdir", file_name="file"):
     First create isolated pattern files for patterns with a "name" attribute.
     Then create pattern files for all patterns.
     """
-    pattern_id = _split_patterns(0, magdir, file_name, True)
-    _split_patterns(pattern_id, magdir, file_name)
+    # create output dir
+    file_binary_hash = hashlib.sha224(file_name).hexdigest()
+    outputdir = ".mgc_temp/" + file_binary_hash + "/output"
+    mkdir_p(outputdir)
+
+    pattern_id = 0
+
+    # create pattern files for named patterns
+    pattern_id = _split_patterns(pattern_id, magdir, outputdir, True)
+
+    # create pattern files for all patterns
+    _split_patterns(pattern_id, magdir, outputdir)
 
     print('')
 
