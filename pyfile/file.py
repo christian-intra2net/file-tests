@@ -356,7 +356,7 @@ def get_full_metadata(infile, file_name="file", compiled=True,
                 suffix = ""
             else:
                 suffix = infile[index:]
-            if out_curr == "data\n" and idx_curr == 0:
+            if idx_curr == 0:    # get same output even with empty pattern file
                 buf = ""
             return dict(output=out_curr, mime=mime, pattern=buf, suffix=suffix)
         else:
