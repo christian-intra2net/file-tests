@@ -182,7 +182,12 @@ def split_patterns(magdir="Magdir", file_name="file"):
     outputdir = ".mgc_temp/" + file_binary_hash + "/output"
     mkdir_p(outputdir)
 
+    # create empty pattern file to later identify what file(1)-output was
+    # created without any pattern file magic
     pattern_id = 0
+    with open(os.path.join(outputdir, str(pattern_id)), "w")  as writer:
+        writer.write('# empty pattern file\n')
+    pattern_id += 1
 
     # create pattern files for named patterns
     pattern_id = _split_patterns(pattern_id, magdir, outputdir, True)
