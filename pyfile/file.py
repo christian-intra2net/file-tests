@@ -208,6 +208,9 @@ def compile_patterns(file_name="file", file_binary="file"):
     :py:func:`get_full_metadata`.
 
     This requires quite some space on disc.
+
+    TODO: save magic files in extra folder
+    TODO: avoid leaking tmp.mgc if error occurs (e.g. disc full)
     """
     file_binary_hash = hashlib.sha224(file_name).hexdigest()
     magdir = ".mgc_temp/" + file_binary_hash + "/output"
