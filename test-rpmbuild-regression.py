@@ -36,6 +36,7 @@ detected = []
 #: output of test_attr
 undetected = []
 
+
 def test_attr(attr):
     """
     Check a single .attr file.
@@ -47,7 +48,6 @@ def test_attr(attr):
 
     Returns nothing, appends to global variables `detected`, `undetected`.
     """
-
     global detected
     global undetected
     regex = None
@@ -79,7 +79,7 @@ def test_attr(attr):
                 continue
             full_path = os.path.join(path, f)
             output = get_simple_metadata(full_path)['output']
-            #print regex, [output]
+            # print regex, [output]
             p1 = Popen(["echo", "-n", output[:-1]], stdout=PIPE)
             p2 = Popen(["grep", regex], stdin=p1.stdout, stdout=PIPE)
             p1.stdout.close()
@@ -92,6 +92,7 @@ def test_attr(attr):
                     undetected.remove(full_path)
                 detected.append(full_path)
 
+
 # run this only if started as script from command line
 if __name__ == '__main__':
     for attr in os.listdir("./rpm-fileattrs"):
@@ -99,6 +100,5 @@ if __name__ == '__main__':
 
     print "Undetected:", undetected
 
-    #metadata = get_simple_metadata(sys.argv[1])
-
-    #print metadata
+    # metadata = get_simple_metadata(sys.argv[1])
+    # print metadata
