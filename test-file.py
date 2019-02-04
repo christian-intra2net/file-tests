@@ -16,6 +16,15 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 # USA.
 
+"""
+Compare output of currently installed file(1) with that saved db for given arg.
+
+Compares output of `file filename` and `file -i filename` (i.e. mime type).
+
+Run:
+    python test-file.py db/ext/sample.ext
+"""
+
 import sys
 from pyfile import *
 
