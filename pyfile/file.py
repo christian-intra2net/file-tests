@@ -228,6 +228,7 @@ def compile_patterns(file_name="file", file_binary="file"):
         out_file = ".mgc_temp/" + file_binary_hash + "/.find-magic.tmp." + \
                    str(file_index) + ".mgc"
         if not os.path.exists(out_file):
+            assert str(file_index) in loop_file_name
             with open(os.path.join(magdir, loop_file_name), "r") as reader:
                 buf = reader.read()
             # read name of original pattern file in magic dir from first line
