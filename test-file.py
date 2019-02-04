@@ -13,8 +13,8 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-#
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+# USA.
 
 import sys
 import mimetypes
@@ -22,11 +22,11 @@ from pyfile import *
 
 # run this only if started as script from command line
 if __name__ == '__main__':
-	mimetypes.init()
+    mimetypes.init()
 
-	print sys.argv[1]
-	metadata = get_simple_metadata(sys.argv[1])
-	stored_metadata = get_stored_metadata(sys.argv[1])
+    print sys.argv[1]
+    metadata = get_simple_metadata(sys.argv[1])
+    stored_metadata = get_stored_metadata(sys.argv[1])
 
-	if is_regression(stored_metadata, metadata):
-		sys.exit(1)
+    if is_regression(stored_metadata, metadata):
+        sys.exit(1)
