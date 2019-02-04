@@ -16,6 +16,10 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 # USA.
 
+"""
+Check that output in db matches regular expressions defined in rpm-fileattrs.
+"""
+
 import os
 import sys
 from subprocess import Popen, PIPE
@@ -24,10 +28,26 @@ from pyfile import *
 
 mimetypes.init()
 
+#: list of entries in db that match regex from attr files
+#: output of test_attr but unused
 detected = []
+
+#: list of entries in db that did not match regex from attr files.
+#: output of test_attr
 undetected = []
 
 def test_attr(attr):
+    """
+    Check a single .attr file.
+
+    Only implemented for attr files that mention perl, python, elf or mono.
+
+    Extracts regex from _magic line. Applies that regex to output saved output
+    of perl/python/elf/mono files
+
+    Returns nothing, appends to global variables `detected`, `undetected`.
+    """
+
     global detected
     global undetected
     regex = None
