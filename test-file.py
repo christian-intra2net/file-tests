@@ -17,13 +17,10 @@
 # USA.
 
 import sys
-import mimetypes
 from pyfile import *
 
 # run this only if started as script from command line
 if __name__ == '__main__':
-    mimetypes.init()
-
     print sys.argv[1]
     metadata = get_simple_metadata(sys.argv[1])
     stored_metadata = get_stored_metadata(sys.argv[1])
