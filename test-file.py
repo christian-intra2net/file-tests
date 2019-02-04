@@ -16,12 +16,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 
-import os
 import sys
-import errno
-from subprocess import Popen, PIPE
 import mimetypes
-import difflib
 from pyfile import *
 
 # run this only if started as script from command line
