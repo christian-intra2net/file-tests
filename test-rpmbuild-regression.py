@@ -13,8 +13,8 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-#
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+# USA.
 
 import os
 import sys
@@ -28,57 +28,57 @@ detected = []
 undetected = []
 
 def test_attr(attr):
-	global detected
-	global undetected
-	regex = None
-	path = None
-	f = open(attr)
-	for line in f.readlines():
-		if len(line.split()) != 0 and line.split()[0].endswith("_magic"):
-			regex = line[line.find("_magic") + 6:].strip()
-			regex = regex.replace("(", "\\(")
-			regex = regex.replace(")", "\\)")
-			regex = regex.replace("|", "\\|")
-			regex = regex.replace("?", "\\?")
+    global detected
+    global undetected
+    regex = None
+    path = None
+    f = open(attr)
+    for line in f.readlines():
+        if len(line.split()) != 0 and line.split()[0].endswith("_magic"):
+            regex = line[line.find("_magic") + 6:].strip()
+            regex = regex.replace("(", "\\(")
+            regex = regex.replace(")", "\\)")
+            regex = regex.replace("|", "\\|")
+            regex = regex.replace("?", "\\?")
 
-			l = line.split()[0]
-			if l.find("perl") != -1:
-				path = "./db/pl"
-			elif l.find("python") != -1:
-				path = "./db/py"
-			elif l.find("elf") != -1:
-				path = "./db/elf"
-			elif l.find("mono") != -1:
-				path = "./db/mono"
-			break
-	f.close()
+            l = line.split()[0]
+            if l.find("perl") != -1:
+                path = "./db/pl"
+            elif l.find("python") != -1:
+                path = "./db/py"
+            elif l.find("elf") != -1:
+                path = "./db/elf"
+            elif l.find("mono") != -1:
+                path = "./db/mono"
+            break
+    f.close()
 
-	if regex and path:
-		for f in os.listdir(path):
-			if f.endswith("json"):
-				continue
-			full_path = os.path.join(path, f)
-			output = get_simple_metadata(full_path)['output']
-			#print regex, [output]
-			p1 = Popen(["echo", "-n", output[:-1]], stdout=PIPE)
-			p2 = Popen(["grep", regex], stdin=p1.stdout, stdout=PIPE)
-			p1.stdout.close()
-			output = p2.communicate()[0]
-			if len(output) == 0 and not full_path in detected:
-				if not full_path in undetected:
-					undetected.append(full_path)
-			elif not full_path in detected:
-				if full_path in undetected:
-					undetected.remove(full_path)
-				detected.append(full_path)
+    if regex and path:
+        for f in os.listdir(path):
+            if f.endswith("json"):
+                continue
+            full_path = os.path.join(path, f)
+            output = get_simple_metadata(full_path)['output']
+            #print regex, [output]
+            p1 = Popen(["echo", "-n", output[:-1]], stdout=PIPE)
+            p2 = Popen(["grep", regex], stdin=p1.stdout, stdout=PIPE)
+            p1.stdout.close()
+            output = p2.communicate()[0]
+            if len(output) == 0 and not full_path in detected:
+                if not full_path in undetected:
+                    undetected.append(full_path)
+            elif not full_path in detected:
+                if full_path in undetected:
+                    undetected.remove(full_path)
+                detected.append(full_path)
 
 # run this only if started as script from command line
 if __name__ == '__main__':
-	for attr in os.listdir("./rpm-fileattrs"):
-		test_attr(os.path.join("./rpm-fileattrs", attr))
+    for attr in os.listdir("./rpm-fileattrs"):
+        test_attr(os.path.join("./rpm-fileattrs", attr))
 
-	print "Undetected:", undetected
+    print "Undetected:", undetected
 
-	#metadata = get_simple_metadata(sys.argv[1])
+    #metadata = get_simple_metadata(sys.argv[1])
 
-	#print metadata
+    #print metadata
