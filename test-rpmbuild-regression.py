@@ -18,12 +18,9 @@
 
 import os
 import sys
-import errno
 from subprocess import Popen, PIPE
 import mimetypes
-import difflib
 from pyfile import *
-import re
 
 mimetypes.init()
 
